@@ -2,14 +2,16 @@ name: Go
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "test" ]
   pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
-      image: ghcr.io/vanilla-os/pico:main
+      image: ghcr.io/vanilla-arm/pico:dev
 
     steps:
     - uses: actions/checkout@v4
@@ -43,10 +45,8 @@ jobs:
           vanilla-tools*.tar.gz
 
     - name: Release
-      if: github.ref == 'refs/heads/main'
       uses: softprops/action-gh-release@v1
       with:
-        token: "${{ secrets.GITHUB_TOKEN }}"
         tag_name: "continuous"
         prerelease: true
         name: "Continuous Build"
